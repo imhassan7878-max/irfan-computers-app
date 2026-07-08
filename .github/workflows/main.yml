@@ -6,19 +6,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - run: unzip Irfan_Computers_Android_CloudBuild_v1.zip
+      - name: Extract app ZIP
+        run: unzip -o Irfan_Computers_Android_CloudBuild_v1.zip
 
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
 
-      - run: |
+      - name: Fix and build APK
+        run: |
           cd irfan_computers_app
           flutter create --platforms=android .
-          flutter pub get           sed -i '312s/.*/        ]);/' lib/main.dart
+          flutter pub get
+          
           flutter build apk --release
 
       - uses: actions/upload-artifact@v4
